@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: movies-service
-        image: ghcr.io/olgalotka/architecture-pro-cinemaabyss/movies-service:latest
+        image: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/movies-service:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8081

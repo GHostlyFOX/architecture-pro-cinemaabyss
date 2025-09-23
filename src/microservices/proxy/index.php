@@ -6,6 +6,12 @@ $migrationPercent = getenv('MOVIES_MIGRATION_PERCENT');
 
 $requestUri = $_SERVER['REQUEST_URI'];
 
+if ($requestUri === '/health') {
+    header('Content-Type: application/json');
+    echo json_encode(['status' => 'ok', 'service' => 'proxy-service']);
+    exit;
+}
+
 $targetUrl = '';
 
 if (strpos($requestUri, '/api/movies') === 0) {

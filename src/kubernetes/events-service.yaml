@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: events-servicei
-          image:  ghcr.io/olgalotka/architecture-pro-cinemaabyss/events-service:latest
+          image:  ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/events-service:latest
           imagePullPolicy: NotIfPresent
           ports:
             - containerPort: 8082
