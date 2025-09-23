@@ -1,0 +1,43 @@
+@startuml
+title Кинобездна Container Diagram
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(person, "User", "Выбирает фильм")
+
+
+Container_Boundary(CinemaSpaceSystem, "Кинобездна System") {
+Container(webApp, "Web Application", "React", "ui")
+Container(mobileApp, "Mobile Application", "React", "ui")
+Container(gateway, "API Gateway", "", "proxy")
+Container(paymentProxy, "PaymentProxy", "", "proxy")
+Container(profile, "Profile", "", "proxy")
+Container(cinemaCatalog, "Movies", "", "proxy")
+Container(core, "Core", "", "proxy")
+Container(database, "Database", "PostgreSQL", "Сохранение данных профиля")
+
+}
+
+System_Ext(paymentService, "PaymentService System", "Оплата сервиса")
+System_Ext(feedService, "FeedService System", "Рекомендации")
+System_Ext(onlineCinemaService, "onlineCinema System", "Онлайн кинотеатр")
+
+
+Rel(person, webApp, "Действия пользователя")
+Rel(person, mobileApp, "Действия пользователя")
+Rel(webApp, gateway, "Проксирование запросов")
+Rel(mobileApp, gateway, "Проксирование запросов")
+Rel(paymentProxy, paymentService, "Проксирование запросов к платежному сервису")
+Rel(gateway, core, "Проксирование запросов к платежному сервису")
+
+Rel(core, paymentProxy, "Проксирование запросов к платежному сервису")
+Rel(core, feedService, "Проксирование запросов к платежному сервису")
+
+Rel(gateway, cinemaCatalog, "Проксирование запросов к каталогу фильмов")
+Rel(gateway, profile, "Проксирование запросов к профилю")
+Rel(cinemaCatalog, onlineCinemaService, "Проксирование запросов к каталогу фильмов")
+
+
+Rel(profile, database, "Сохранение данных профиля")
+
+@enduml

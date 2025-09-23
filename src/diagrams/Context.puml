@@ -1,0 +1,17 @@
+@startuml
+title Кинобездна Context Diagram
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(person, "User", "Выбирает фильм")
+System(movieHome, "Кинобездна", "Профиль пользователя, поиск фильмов, рекомендации")
+System_Ext(paymentService, "PaymentService System", "Оплата сервиса")
+System_Ext(feedService, "FeedService System", "Рекомендации")
+System_Ext(onlineCinemaService, "onlineCinema System", "Онлайн кинотеатр")
+
+Rel(person, movieHome, "Выбирает фильм")
+Rel(movieHome, paymentService, "Оплата сервиса, покупка фильмов")
+Rel(movieHome, feedService, "Рекомендации фильмов и сериалов")
+Rel(movieHome, onlineCinemaService, "Рекомендации фильмов и сериалов")
+
+@enduml

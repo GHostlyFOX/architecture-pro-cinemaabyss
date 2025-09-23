@@ -1,0 +1,13 @@
+{
+  "name": "cinemaabyss/events-service",
+  "description": "Events microservice for CinemaAbyss",
+  "require": {
+    "php": ">=8.0"
+  },
+  "authors": [
+    {
+      "name": "Jules",
+      "email": "jules@example.com"
+    }
+  ]
+}

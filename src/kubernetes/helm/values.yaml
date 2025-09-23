@@ -5,7 +5,7 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvIjogewoJCQkiYXV0aCI6
+  dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJImdoY3IuaW8vKiI6IHsNCgkJCSJhdXRoIjogImIyeG5ZV3h2ZEd0aE9tZG9jRjlJZFRWb1FXdFFiR0Y1VGxwdlVVUkxWMGsyZHpKSFNGSmFUSGsxV0hVemFrNVdibTQiDQoJCX0NCgl9DQp9
 # Database configuration
 database:
   host: postgres
@@ -26,16 +26,16 @@ database:
       memory: 512Mi
   persistence:
     enabled: true
-    size: 10Gi
+    size: 1Gi
     accessMode: ReadWriteOnce
 
 # Monolith configuration
 monolith:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/monolith
+    repository: ghcr.io/olgalotka/architecture-pro-cinemaabyss/monolith
     tag: latest
-    pullPolicy: Always
+    pullPolicy: Never
   replicas: 1
   resources:
     limits:
@@ -53,9 +53,9 @@ monolith:
 proxyService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/proxy-service
+    repository: ghcr.io/olgalotka/architecture-pro-cinemaabyss/proxy-service
     tag: latest
-    pullPolicy: Always
+    pullPolicy: Never
   replicas: 1
   resources:
     limits:
@@ -73,9 +73,9 @@ proxyService:
 moviesService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/movies-service
+    repository: ghcr.io/olgalotka/architecture-pro-cinemaabyss/movies-service
     tag: latest
-    pullPolicy: Always
+    pullPolicy: Never
   replicas: 1
   resources:
     limits:
@@ -93,9 +93,9 @@ moviesService:
 eventsService:
   enabled: true
   image:
-    repository: ghcr.io/db-exp/cinemaabysstest/events-service
+    repository: ghcr.io/olgalotka/architecture-pro-cinemaabyss/events-service
     tag: latest
-    pullPolicy: Always
+    pullPolicy: Never
   replicas: 1
   resources:
     limits:
@@ -126,7 +126,7 @@ kafka:
       memory: 512Mi
   persistence:
     enabled: true
-    size: 5Gi
+    size: 1Gi
     accessMode: ReadWriteOnce
   topics:
     - name: movie-events
@@ -177,6 +177,14 @@ ingress:
           pathType: Prefix
           service: events-service
           port: 8082
+        - path: /api/movies
+          pathType: Prefix
+          service: movies-service
+          port: 8081
+        - path: /api/monolith
+          pathType: Prefix
+          service: monolith
+          port: 8080
 
 # Application configuration
 config:
