@@ -16,13 +16,13 @@
     },
     {
       "key": "eventsServiceUrl",
-      "value": "http://events-service:8082",
+      "value": "http://events-nginx:8082",
       "type": "default",
       "enabled": true
     },
     {
       "key": "proxyServiceUrl",
-      "value": "http://proxy-service:8000",
+      "value": "http://proxy-nginx:8000",
       "type": "default",
       "enabled": true
     }

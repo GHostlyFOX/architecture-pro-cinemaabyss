@@ -534,7 +534,7 @@
       "name": "Events Microservice",
       "item": [
         {
-          "name": "Health Check",
+          "name": "Health Check via Proxy",
           "request": {
             "method": "GET",
             "url": {
@@ -552,9 +552,9 @@
                   "    pm.response.to.have.status(200);",
                   "});",
                   "",
-                  "pm.test(\"Status is true\", function () {",
+                  "pm.test(\"Status is ok\", function () {",
                   "    var jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.status).to.be.true;",
+                  "    pm.expect(jsonData.status).to.equal(\"ok\");",
                   "});"
                 ],
                 "type": "text/javascript"
