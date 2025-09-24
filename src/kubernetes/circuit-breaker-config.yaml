@@ -1,4 +1,4 @@
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: cinemaabyss-vs
@@ -29,7 +29,7 @@ spec:
               number: 8000
           weight: 100
 ---
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: monolith-dr
@@ -40,7 +40,7 @@ spec:
     tls:
       mode: ISTIO_MUTUAL
 ---
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: movies-service-dr
@@ -51,7 +51,7 @@ spec:
     tls:
       mode: ISTIO_MUTUAL
 ---
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: events-service-dr
@@ -62,7 +62,7 @@ spec:
     tls:
       mode: ISTIO_MUTUAL
 ---
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: proxy-service-dr
