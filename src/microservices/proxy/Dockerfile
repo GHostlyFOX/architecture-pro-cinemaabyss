@@ -12,3 +12,6 @@ COPY index.php .
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000
+
+# Run PHP-FPM
+CMD ["php-fpm"]
