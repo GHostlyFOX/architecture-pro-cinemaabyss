@@ -12,13 +12,20 @@ spec:
     - host: cinemaabyss.example.com
       http:
         paths:
-          - path: /
+          - path: /api/movies
             pathType: Prefix
             backend:
               service:
-                name: proxy-service
+                name: movies-service
                 port:
-                  number: 8000
+                  number: 8081
+          - path: /api/users
+            pathType: Prefix
+            backend:
+              service:
+                name: users-service
+                port:
+                  number: 8083
           - path: /api/events
             pathType: Prefix
             backend:
@@ -33,10 +40,3 @@ spec:
                 name: proxy-service
                 port:
                   number: 8000
-          - path: /api/movies
-            pathType: Prefix
-            backend:
-              service:
-                name: movies-service
-                port:
-                  number: 8081
