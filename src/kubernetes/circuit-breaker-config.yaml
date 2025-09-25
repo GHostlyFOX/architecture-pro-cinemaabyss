@@ -1,74 +1,31 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: cinemaabyss-vs
-  namespace: cinemaabyss
+  name: cinemaabyss
 spec:
   hosts:
-    - "cinemaabyss.example.com"
+    - cinemaabyss
   http:
     - route:
         - destination:
             host: monolith
-            port:
-              number: 8080
           weight: 80
         - destination:
             host: movies-service
-            port:
-              number: 8081
           weight: 20
         - destination:
             host: events-service
-            port:
-              number: 8082
           weight: 100
         - destination:
             host: proxy-service
-            port:
-              number: 8000
           weight: 100
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: monolith-dr
-  namespace: cinemaabyss
+  name: cinemaabyss
 spec:
-  host: monolith
+  host: cinemaabyss
   trafficPolicy:
     tls:
-      mode: ISTIO_MUTUAL
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: movies-service-dr
-  namespace: cinemaabyss
-spec:
-  host: movies-service
-  trafficPolicy:
-    tls:
-      mode: ISTIO_MUTUAL
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: events-service-dr
-  namespace: cinemaabyss
-spec:
-  host: events-service
-  trafficPolicy:
-    tls:
-      mode: ISTIO_MUTUAL
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: proxy-service-dr
-  namespace: cinemaabyss
-spec:
-  host: proxy-service
-  trafficPolicy:
-    tls:
-      mode: ISTIO_MUTUAL
+      mode: DISABLE
