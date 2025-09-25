@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-fpm
 
 # Install curl extension for PHP
 RUN apk --no-cache add curl-dev \
@@ -11,4 +11,4 @@ WORKDIR /var/www/html
 COPY index.php .
 
 # Expose port 9000 for PHP-FPM
-EXPOSE 9000
+EXPOSE 9002
