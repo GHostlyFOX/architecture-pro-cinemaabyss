@@ -15,7 +15,7 @@ if ($requestUri === '/health') {
 $targetUrl = '';
 
 if (strpos($requestUri, '/api/movies') === 0) {
-    if ((int)$migrationPercent > 0 && rand(1, 100) <= (int)$migrationPercent) {
+    if ((int)$migrationPercent > 50) {
         $targetUrl = $moviesServiceUrl . $requestUri;
     } else {
         $targetUrl = $monolithUrl . $requestUri;
