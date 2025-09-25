@@ -23,7 +23,7 @@ spec:
       containers:
         - name: proxy-service
           image: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/proxy-service:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
@@ -45,13 +45,13 @@ spec:
               memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /api/users
+              path: /health
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /api/users
+              path: /health
               port: 8000
             initialDelaySeconds: 15
             periodSeconds: 20
@@ -64,6 +64,8 @@ kind: Service
 metadata:
   name: proxy-service
   namespace: cinemaabyss
+  labels:
+    app: proxy-service
 spec:
   selector:
     app: proxy-service

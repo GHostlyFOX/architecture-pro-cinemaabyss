@@ -21,9 +21,9 @@ spec:
         app: events-service
     spec:
       containers:
-        - name: events-servicei
+        - name: events-service
           image:  ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/events-service:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8082
           env:
@@ -45,15 +45,15 @@ spec:
               memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /api/users
+              path: /api/events/health
               port: 8082
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /api/users
+              path: /api/events/health
               port: 8082
-            initialDelaySeconds: 15
+            initialDelaySeconds: 20
             periodSeconds: 20
       restartPolicy: Always
       imagePullSecrets:
@@ -64,6 +64,8 @@ kind: Service
 metadata:
   name: events-service
   namespace: cinemaabyss
+  labels:
+    app: events-service
 spec:
   selector:
     app: events-service
