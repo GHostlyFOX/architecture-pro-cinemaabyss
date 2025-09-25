@@ -4,25 +4,25 @@
   "values": [
     {
       "key": "baseUrl",
-      "value": "http://cinemaabyss.example.com",
+      "value": "http://monolith:8080",
       "type": "default",
       "enabled": true
     },
     {
       "key": "moviesServiceUrl",
-      "value": "http://cinemaabyss.example.com",
+      "value": "http://movies-service:8081",
       "type": "default",
       "enabled": true
     },
     {
       "key": "eventsServiceUrl",
-      "value": "http://cinemaabyss.example.com",
+      "value": "http://events-nginx:8082",
       "type": "default",
       "enabled": true
     },
     {
       "key": "proxyServiceUrl",
-      "value": "http://cinemaabyss.example.com",
+      "value": "http://proxy-nginx:8000",
       "type": "default",
       "enabled": true
     }
