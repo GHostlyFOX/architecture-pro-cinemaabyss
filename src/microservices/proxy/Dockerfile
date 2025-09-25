@@ -1,9 +1,5 @@
 FROM php:8.2-fpm
 
-# Install curl extension for PHP
-RUN apk --no-cache add curl-dev \
-    && docker-php-ext-install curl
-
 # Set working directory
 WORKDIR /var/www/html
 
