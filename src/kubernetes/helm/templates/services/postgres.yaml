@@ -7,7 +7,6 @@ metadata:
     app: postgres
     app.kubernetes.io/name: {{ include "cinemaabyss.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   serviceName: postgres
   replicas: 1
@@ -42,7 +41,7 @@ spec:
               name: cinemaabyss-config
               key: DB_NAME
         resources:
-          {{- toYaml .Values.database.resources | nindent 10 }}
+          {{- toYaml .Values.database.resources | nindent 18 }}
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
@@ -67,7 +66,7 @@ spec:
   - metadata:
       name: postgres-data
     spec:
-      accessModes: ["{{ .Values.database.persistence.accessMode }}"]
+      accessModes: [{{ .Values.database.persistence.accessMode }}]
       resources:
         requests:
           storage: {{ .Values.database.persistence.size }}

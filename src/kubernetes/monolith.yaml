@@ -23,7 +23,7 @@ spec:
       containers:
       - name: monolith
         image: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/monolith:latest
-        imagePullPolicy: NotIfPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:

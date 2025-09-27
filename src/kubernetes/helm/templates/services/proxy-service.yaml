@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: proxy-service
-        image: {{ .Values.proxyService.image.repository }}:{{ .Values.proxyService.image.tag }}
+        image: "{{ .Values.proxyService.image.repository }}:{{ .Values.proxyService.image.tag }}"
         imagePullPolicy: {{ .Values.proxyService.image.pullPolicy }}
         ports:
           - containerPort: {{ .Values.proxyService.service.targetPort }}
@@ -40,16 +40,16 @@ spec:
           - secretRef:
               name: cinemaabyss-secrets
         resources:
-          {{- toYaml .Values.proxyService.resources | nindent 10 }}
+          {{- toYaml .Values.proxyService.resources | nindent 18 }}
         readinessProbe:
           httpGet:
-            path: /api/proxy/health
+            path: /health
             port: {{ .Values.proxyService.service.targetPort }}
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /api/proxy/health
+            path: /health
             port: {{ .Values.proxyService.service.targetPort }}
           initialDelaySeconds: 15
           periodSeconds: 20
@@ -66,12 +66,11 @@ metadata:
     app: proxy-service
     app.kubernetes.io/name: {{ include "cinemaabyss.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   selector:
     app: proxy-service
   ports:
-    - port: {{ .Values.proxyService.service.port }}
-      targetPort: {{ .Values.proxyService.service.targetPort }}
+  - port: {{ .Values.proxyService.service.port }}
+    targetPort: {{ .Values.proxyService.service.targetPort }}
   type: {{ .Values.proxyService.service.type }}
 {{- end }}

@@ -5,7 +5,7 @@ global:
 
 # Image pull secrets
 imagePullSecrets:
-  dockerconfigjson: ew0KCSJhdXRocyI6IHsNCgkJImdoY3IuaW8vKiI6IHsNCgkJCSJhdXRoIjogImIyeG5ZV3h2ZEd0aE9tZG9jRjlJZFRWb1FXdFFiR0Y1VGxwdlVVUkxWMGsyZHpKSFNGSmFUSGsxV0hVemFrNVdibTQiDQoJCX0NCgl9DQp9
+  dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaGNyLmlvLyoiOiB7CgkJCSJhdXRoIjogImdocF9seXk4TzZwSjBNdHR3eER0c2FGVTFoMmNvaU41dFUxdmV4aDgiCgkJfQoJfQp9
 # Database configuration
 database:
   host: postgres
@@ -26,7 +26,7 @@ database:
       memory: 512Mi
   persistence:
     enabled: true
-    size: 1Gi
+    size: 10Gi
     accessMode: ReadWriteOnce
 
 # Monolith configuration
@@ -35,7 +35,7 @@ monolith:
   image:
     repository: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/monolith
     tag: latest
-    pullPolicy: Never
+    pullPolicy: Always
   replicas: 1
   resources:
     limits:
@@ -55,7 +55,7 @@ proxyService:
   image:
     repository: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/proxy-service
     tag: latest
-    pullPolicy: Never
+    pullPolicy: Always
   replicas: 1
   resources:
     limits:
@@ -75,7 +75,7 @@ moviesService:
   image:
     repository: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/movies-service
     tag: latest
-    pullPolicy: Never
+    pullPolicy: Always
   replicas: 1
   resources:
     limits:
@@ -95,7 +95,7 @@ eventsService:
   image:
     repository: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/events-service
     tag: latest
-    pullPolicy: Never
+    pullPolicy: Always
   replicas: 1
   resources:
     limits:
@@ -126,7 +126,7 @@ kafka:
       memory: 512Mi
   persistence:
     enabled: true
-    size: 1Gi
+    size: 5Gi
     accessMode: ReadWriteOnce
   topics:
     - name: movie-events
