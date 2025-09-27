@@ -20,7 +20,7 @@ WORKDIR /var/www/html
 
 # Copy composer files and install dependencies
 COPY composer.json ./
-RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist
+RUN composer install --no-interaction --prefer-dist --no-dev
 
 # Copy application code
 COPY . .

@@ -54,18 +54,34 @@ jobs:
       - name: Run API tests
         working-directory: tests/postman
         run: |
-
+          
           docker compose up -d
-          # Wait for services to be ready
+          # Stream logs in background
+          docker compose logs -f &
           echo "Waiting for services to be ready..."
-          sleep 15
+          sleep 120
+
           # Build the Docker image
           docker build -t cinemaabyss-api-tests .
           
           # Run the tests in Docker
           docker run --network=cinemaabyss-network -v "$(pwd)/reports:/app/reports" cinemaabyss-api-tests
         
-      
+      - name: Show docker logs
+        if: always()
+        run: |
+          echo "===== Docker ps ====="
+          docker ps -a
+          echo "===== Logs: events-php ====="
+          docker logs cinemaabyss-events-php || true
+          echo "===== Logs: events-nginx ====="
+          docker logs cinemaabyss-events-nginx || true
+          echo "===== Logs: proxy-php ====="
+          docker logs cinemaabyss-proxy-php || true
+          echo "===== Logs: proxy-nginx ====="
+          docker logs cinemaabyss-proxy-nginx || true
+          echo "===== Logs: kafka ====="
+          docker logs kafka || true
       - name: Stop services
         if: always()
         run: docker compose down

@@ -57,7 +57,7 @@ spec:
             periodSeconds: 20
       restartPolicy: Always
       imagePullSecrets:
-      - name: dockerconfigjson
+        - name: dockerconfigjson
 ---
 apiVersion: v1
 kind: Service
@@ -70,6 +70,6 @@ spec:
   selector:
     app: events-service
   ports:
-  - port: 8082
-    targetPort: 8082
+    - port: 8082
+      targetPort: 8082
   type: ClusterIP
