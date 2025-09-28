@@ -82,63 +82,42 @@ services:
     networks:
       - cinemaabyss-network
 
-  # Events Microservice (PHP-FPM)
-  events-php:
+  # Events Microservice
+  events-service:
     build:
       context: ./src/microservices/events
       dockerfile: Dockerfile
-    container_name: cinemaabyss-events-php
+    container_name: cinemaabyss-events-service
     depends_on:
       - postgres
       - kafka
+    ports:
+      - "8082:8082"
     environment:
+      PORT: 8082
       KAFKA_BROKERS: kafka:9092
     networks:
       - cinemaabyss-network
 
-  # Events Microservice (Nginx)
-  events-nginx:
-    image: nginx:alpine
-    container_name: cinemaabyss-events-nginx
-    ports:
-      - "8082:8082"
-    volumes:
-      - ./src/microservices/events:/var/www/html
-      - ./src/microservices/events/nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - events-php
-    networks:
-      - cinemaabyss-network
-
-  # Proxy Service (PHP-FPM)
-  proxy-php:
+  # Proxy Service (API Gateway)
+  proxy-service:
     build:
       context: ./src/microservices/proxy
       dockerfile: Dockerfile
-    container_name: cinemaabyss-proxy-php
-    environment:
-      MONOLITH_URL: http://monolith:8080
-      MOVIES_SERVICE_URL: http://movies-service:8081
-      EVENTS_SERVICE_URL: http://events-nginx:8082
-      GRADUAL_MIGRATION: "true"
-      MOVIES_MIGRATION_PERCENT: "50"
-    networks:
-      - cinemaabyss-network
-
-  # Proxy Service (Nginx)
-  proxy-nginx:
-    image: nginx:alpine
-    container_name: cinemaabyss-proxy-nginx
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./src/microservices/proxy:/var/www/html
-      - ./src/microservices/proxy/nginx.conf:/etc/nginx/conf.d/default.conf
+    container_name: cinemaabyss-proxy-service
     depends_on:
-      - proxy-php
       - monolith
       - movies-service
-      - events-nginx
+      - events-service
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      MONOLITH_URL: http://monolith:8080
+      MOVIES_SERVICE_URL: http://movies-service:8081
+      EVENTS_SERVICE_URL: http://events-service:8082
+      GRADUAL_MIGRATION: "true"
+      MOVIES_MIGRATION_PERCENT: "50"
     networks:
       - cinemaabyss-network
 
