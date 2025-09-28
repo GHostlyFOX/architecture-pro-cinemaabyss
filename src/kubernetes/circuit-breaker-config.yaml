@@ -1,26 +1,26 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: cinemaabyss
 spec:
   hosts:
-  - cinemaabyss
+    - cinemaabyss
   http:
-  - route:
-    - destination:
-        host: monolith
-      weight: 80
-    - destination:
-        host: movies-service
-      weight: 20
-    - destination:
-        host: events-service
-      weight: 100
-    - destination:
-        host: proxy-service
-      weight: 100
+    - route:
+        - destination:
+            host: monolith
+          weight: 80
+        - destination:
+            host: movies-service
+          weight: 20
+        - destination:
+            host: events-service
+          weight: 100
+        - destination:
+            host: proxy-service
+          weight: 100
 ---
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
   name: cinemaabyss

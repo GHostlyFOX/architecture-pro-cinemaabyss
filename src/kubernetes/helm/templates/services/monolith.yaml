@@ -8,7 +8,6 @@ metadata:
     app: monolith
     app.kubernetes.io/name: {{ include "cinemaabyss.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.monolith.replicas }}
   selector:
@@ -41,7 +40,7 @@ spec:
         - secretRef:
             name: cinemaabyss-secrets
         resources:
-          {{- toYaml .Values.monolith.resources | nindent 10 }}
+          {{- toYaml .Values.monolith.resources | nindent 18 }}
         readinessProbe:
           httpGet:
             path: /api/users

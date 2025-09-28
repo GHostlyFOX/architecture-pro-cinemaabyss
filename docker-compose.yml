@@ -73,7 +73,8 @@ services:
       dockerfile: Dockerfile
     container_name: cinemaabyss-movies-service
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:
@@ -88,6 +89,11 @@ services:
       context: ./src/microservices/events
       dockerfile: Dockerfile
     container_name: cinemaabyss-events-php
+    healthcheck:
+      test: ["CMD-SHELL", "cgi-fcgi -bind -connect 127.0.0.1:9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       - postgres
       - kafka
@@ -97,16 +103,24 @@ services:
       - cinemaabyss-network
 
   # Events Microservice (Nginx)
-  events-nginx:
-    image: nginx:alpine
-    container_name: cinemaabyss-events-nginx
+  events-service:
+    build:
+      context: ./src/microservices/events
+      dockerfile: Dockerfile.nginx
+    container_name: cinemaabyss-events-service
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/api/events/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     ports:
       - "8082:8082"
     volumes:
       - ./src/microservices/events:/var/www/html
       - ./src/microservices/events/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - events-php
+      events-php:
+        condition: service_healthy
     networks:
       - cinemaabyss-network
 
@@ -116,29 +130,45 @@ services:
       context: ./src/microservices/proxy
       dockerfile: Dockerfile
     container_name: cinemaabyss-proxy-php
+    healthcheck:
+      test: ["CMD-SHELL", "cgi-fcgi -bind -connect 127.0.0.1:9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       MONOLITH_URL: http://monolith:8080
       MOVIES_SERVICE_URL: http://movies-service:8081
-      EVENTS_SERVICE_URL: http://events-nginx:8082
+      EVENTS_SERVICE_URL: http://events-service:8082
       GRADUAL_MIGRATION: "true"
       MOVIES_MIGRATION_PERCENT: "50"
     networks:
       - cinemaabyss-network
 
   # Proxy Service (Nginx)
-  proxy-nginx:
-    image: nginx:alpine
-    container_name: cinemaabyss-proxy-nginx
+  proxy-service:
+    build:
+      context: ./src/microservices/proxy
+      dockerfile: Dockerfile.nginx
+    container_name: cinemaabyss-proxy-service
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     ports:
       - "8000:8000"
     volumes:
       - ./src/microservices/proxy:/var/www/html
       - ./src/microservices/proxy/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - proxy-php
-      - monolith
-      - movies-service
-      - events-nginx
+      proxy-php:
+        condition: service_healthy
+      monolith:
+        condition: service_started
+      movies-service:
+        condition: service_started
+      events-service:
+        condition: service_healthy
     networks:
       - cinemaabyss-network
 

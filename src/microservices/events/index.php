@@ -24,7 +24,7 @@ switch ($path) {
     case '/health':
     case '/api/events/health':
         if ($requestMethod === 'GET') {
-            echo json_encode(['status' => 'ok', 'service' => 'events-service']);
+            echo json_encode(['status' => true, 'service' => 'events-service']);
         } else {
             http_response_code(405); // Method Not Allowed
             echo json_encode(['error' => 'Method Not Allowed']);
