@@ -38,6 +38,7 @@ jobs:
           docker compose up -d
           # Wait for services to be ready
           echo "Waiting for services to be ready..."
+          sleep 120
       
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -54,9 +55,11 @@ jobs:
         working-directory: tests/postman
         run: |
           
+          docker compose up -d
           # Stream logs in background
           docker compose logs -f &
           echo "Waiting for services to be ready..."
+          sleep 120
 
           # Build the Docker image
           docker build -t cinemaabyss-api-tests .
