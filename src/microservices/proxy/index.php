@@ -8,7 +8,7 @@ $requestUri = $_SERVER['REQUEST_URI'];
 
 if ($requestUri === '/health') {
     header('Content-Type: application/json');
-    echo json_encode(['status' => 'ok', 'service' => 'proxy-service']);
+    echo json_encode(['status' => true, 'service' => 'proxy-service']);
     exit;
 }
 
