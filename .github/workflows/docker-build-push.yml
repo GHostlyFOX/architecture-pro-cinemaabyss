@@ -89,16 +89,15 @@ jobs:
           REPO=${{ github.repository }}
           REGISTRY=${{ env.REGISTRY }}
           cat <<EOF > docker-compose.override.yml
-          version: '3.8'
           services:
             monolith:
-              image: \${REGISTRY}/\${REPO}/monolith:\${IMAGE_TAG}
+              image: ${REGISTRY}/${REPO}/monolith:${IMAGE_TAG}
             movies-service:
-              image: \${REGISTRY}/\${REPO}/movies-service:\${IMAGE_TAG}
+              image: ${REGISTRY}/${REPO}/movies-service:${IMAGE_TAG}
             proxy-service:
-              image: \${REGISTRY}/\${REPO}/proxy-service:\${IMAGE_TAG}
+              image: ${REGISTRY}/${REPO}/proxy-service:${IMAGE_TAG}
             events-service:
-              image: \${REGISTRY}/\${REPO}/events-service:\${IMAGE_TAG}
+              image: ${REGISTRY}/${REPO}/events-service:${IMAGE_TAG}
           EOF
           
           echo "Generated docker-compose.override.yml:"
