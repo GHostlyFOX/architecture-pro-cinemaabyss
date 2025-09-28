@@ -161,7 +161,7 @@ services:
       - ./src/microservices/proxy:/var/www/html
       - ./src/microservices/proxy/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      proxy-service:
+      proxy-php:
         condition: service_healthy
       monolith:
         condition: service_started
