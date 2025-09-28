@@ -33,9 +33,9 @@ jobs:
             path: ./src/monolith
           - name: movies-service
             path: ./src/microservices/movies
-          - name: proxy-nginx
+          - name: proxy-service
             path: ./src/microservices/proxy
-          - name: events-nginx
+          - name: events-service
             path: ./src/microservices/events
 
     steps:

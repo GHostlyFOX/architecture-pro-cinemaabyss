@@ -74,12 +74,12 @@ jobs:
           docker ps -a
           echo "===== Logs: events-php ====="
           docker logs cinemaabyss-events-php || true
-          echo "===== Logs: events-nginx ====="
-          docker logs cinemaabyss-events-nginx || true
+          echo "===== Logs: events-service ====="
+          docker logs cinemaabyss-events-service || true
           echo "===== Logs: proxy-php ====="
           docker logs cinemaabyss-proxy-php || true
-          echo "===== Logs: proxy-nginx ====="
-          docker logs cinemaabyss-proxy-nginx || true
+          echo "===== Logs: proxy-service ====="
+          docker logs cinemaabyss-proxy-service || true
           echo "===== Logs: kafka ====="
           docker logs kafka || true
       - name: Stop services
