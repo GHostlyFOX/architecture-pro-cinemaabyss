@@ -21,39 +21,34 @@ spec:
         app: events-service
     spec:
       containers:
-        - name: events-servicei
+        - name: events-service
           image:  ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/events-service:latest
-          imagePullPolicy: NotIfPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8082
           env:
             - name: PORT
               value: "8082"
-            - name: DB_CONNECTION_STRING
-              value: "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
-          envFrom:
-            - configMapRef:
-                name: cinemaabyss-config
-            - secretRef:
-                name: cinemaabyss-secrets
+            - name: KAFKA_BROKERS
+              value: "kafka:9092"
           resources:
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "300m"
+              memory: "256Mi"
             requests:
               cpu: "100m"
               memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /api/users
+              path: /api/events/health
               port: 8082
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /api/users
+              path: /api/events/health
               port: 8082
-            initialDelaySeconds: 15
+            initialDelaySeconds: 20
             periodSeconds: 20
       restartPolicy: Always
       imagePullSecrets:
@@ -64,6 +59,8 @@ kind: Service
 metadata:
   name: events-service
   namespace: cinemaabyss
+  labels:
+    app: events-service
 spec:
   selector:
     app: events-service

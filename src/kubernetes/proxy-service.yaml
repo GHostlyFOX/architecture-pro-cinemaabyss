@@ -23,35 +23,33 @@ spec:
       containers:
         - name: proxy-service
           image: ghcr.io/ghostlyfox/architecture-pro-cinemaabyss/proxy-service:latest
-          imagePullPolicy: NotIfPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
             - name: PORT
               value: "8000"
-            - name: DB_CONNECTION_STRING
-              value: "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
+            - name: EVENTS_SERVICE_URL
+              value: "http://events-service:8082"
           envFrom:
             - configMapRef:
                 name: cinemaabyss-config
-            - secretRef:
-                name: cinemaabyss-secrets
           resources:
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "300m"
+              memory: "256Mi"
             requests:
               cpu: "100m"
               memory: "128Mi"
           readinessProbe:
             httpGet:
-              path: /api/users
+              path: /health
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /api/users
+              path: /health
               port: 8000
             initialDelaySeconds: 15
             periodSeconds: 20
@@ -64,10 +62,12 @@ kind: Service
 metadata:
   name: proxy-service
   namespace: cinemaabyss
+  labels:
+    app: proxy-service
 spec:
   selector:
     app: proxy-service
   ports:
-  - port: 8000
-    targetPort: 8000
+    - port: 80
+      targetPort: 8000
   type: ClusterIP

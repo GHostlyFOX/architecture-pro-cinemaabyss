@@ -1,31 +1,37 @@
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: cinemaabyss
-spec:
-  hosts:
-  - cinemaabyss
-  http:
-  - route:
-    - destination:
-        host: monolith
-      weight: 80
-    - destination:
-        host: movies-service
-      weight: 20
-    - destination:
-        host: events-service
-      weight: 100
-    - destination:
-        host: proxy-service
-      weight: 100
----
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
 metadata:
-  name: cinemaabyss
+  name: movies-service-circuit-breaker
 spec:
-  host: cinemaabyss
+  host: cinemaabyss-movies-service.cinemaabyss.svc.cluster.local
   trafficPolicy:
-    tls:
-      mode: DISABLE
+    connectionPool:
+      tcp:
+        maxConnections: 1
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
+    outlierDetection:
+      consecutive5xxErrors: 1
+      interval: 1s
+      baseEjectionTime: 1m
+      maxEjectionPercent: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: monolith-circuit-breaker
+spec:
+  host: cinemaabyss-monolith.cinemaabyss.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 1
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
+    outlierDetection:
+      consecutive5xxErrors: 1
+      interval: 1s
+      baseEjectionTime: 1m
+      maxEjectionPercent: 100
