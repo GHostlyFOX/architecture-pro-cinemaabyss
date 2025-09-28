@@ -1,29 +1,32 @@
-FROM php:8.2-fpm
+FROM golang:1.23-alpine AS builder
 
-# Install system dependencies
-RUN apt-get update && apt-get -y install \
-    librdkafka-dev \
-    git \
-    zip \
-    unzip
+WORKDIR /app
 
-# Install rdkafka PHP extension
-RUN pecl channel-update pecl.php.net && pecl install rdkafka && docker-php-ext-enable rdkafka && php -m
+# Copy go mod and sum files
+COPY go.mod go.sum ./
 
-# Install Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
-    php -r "unlink('composer-setup.php');"
+# Download all dependencies
+RUN go mod download
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Copy composer files and install dependencies
-COPY composer.json ./
-RUN composer install --no-interaction --no-plugins --no-scripts --prefer-dist
-
-# Copy application code
+# Copy the source code
 COPY . .
 
-# Expose port 9000 for PHP-FPM
-EXPOSE 9000
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o events-service .
+
+
+# Use a smaller image for the final application
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+# Copy the binary from builder
+COPY --from=builder /app/events-service .
+
+# Expose the application port
+EXPOSE 8082
+
+# Command to run the executable
+CMD ["./events-service"]
