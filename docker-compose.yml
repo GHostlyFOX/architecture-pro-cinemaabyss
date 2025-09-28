@@ -109,7 +109,7 @@ services:
       dockerfile: Dockerfile.nginx
     container_name: cinemaabyss-events-service
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8002/api/events/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/api/events/health"]
       interval: 10s
       timeout: 5s
       retries: 3
