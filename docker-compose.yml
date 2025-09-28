@@ -194,7 +194,7 @@ services:
     container_name: cinemaabyss-api-tests
     profiles:
       - tests
-    command: ["npm", "run", "test:docker". "--", "--reporters", "cli"]
+    command: ["npm", "run", "test:docker", "--", "--reporters", "cli"]
     depends_on:
       monolith:
         condition: service_started
