@@ -5,7 +5,8 @@ RUN apt-get update && apt-get -y install \
     librdkafka-dev \
     git \
     zip \
-    unzip
+    unzip \
+    libfcgi-bin
 
 # Install rdkafka PHP extension
 RUN pecl channel-update pecl.php.net && pecl install rdkafka && docker-php-ext-enable rdkafka && php -m

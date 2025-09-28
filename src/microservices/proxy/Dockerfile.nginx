@@ -1,0 +1,4 @@
+FROM nginx:alpine
+
+# Install wget for healthchecks
+RUN apk --no-cache add wget

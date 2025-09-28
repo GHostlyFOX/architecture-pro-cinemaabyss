@@ -31,12 +31,16 @@ jobs:
         service:
           - name: monolith
             path: ./src/monolith
+            dockerfile: ./src/monolith/Dockerfile
           - name: movies-service
             path: ./src/microservices/movies
+            dockerfile: ./src/microservices/movies/Dockerfile
           - name: proxy-nginx
             path: ./src/microservices/proxy
+            dockerfile: ./src/microservices/proxy/Dockerfile.nginx
           - name: events-nginx
             path: ./src/microservices/events
+            dockerfile: ./src/microservices/events/Dockerfile.nginx
 
     steps:
       - name: Checkout repository
@@ -62,6 +66,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.service.path }}
+          file: ${{ matrix.service.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -85,20 +90,20 @@ jobs:
 
       - name: Create docker-compose override file
         run: |
-          IMAGE_TAG=${{ github.sha }}
-          REPO=${{ github.repository }}
+          IMAGE_TAG=$(echo ${{ github.sha }} | cut -c1-7)
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           REGISTRY=${{ env.REGISTRY }}
           cat <<EOF > docker-compose.override.yml
           version: '3.8'
           services:
             monolith:
-              image: \${REGISTRY}/\${REPO}/monolith:\${IMAGE_TAG}
+              image: ${REGISTRY}/${REPO_LOWER}/monolith:${IMAGE_TAG}
             movies-service:
-              image: \${REGISTRY}/\${REPO}/movies-service:\${IMAGE_TAG}
-            proxy-service:
-              image: \${REGISTRY}/\${REPO}/proxy-service:\${IMAGE_TAG}
-            events-service:
-              image: \${REGISTRY}/\${REPO}/events-service:\${IMAGE_TAG}
+              image: ${REGISTRY}/${REPO_LOWER}/movies-service:${IMAGE_TAG}
+            proxy-nginx:
+              image: ${REGISTRY}/${REPO_LOWER}/proxy-nginx:${IMAGE_TAG}
+            events-nginx:
+              image: ${REGISTRY}/${REPO_LOWER}/events-nginx:${IMAGE_TAG}
           EOF
           
           echo "Generated docker-compose.override.yml:"

@@ -57,7 +57,8 @@ services:
       dockerfile: Dockerfile
     container_name: cinemaabyss-monolith
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
@@ -89,10 +90,10 @@ services:
       dockerfile: Dockerfile
     container_name: cinemaabyss-events-php
     healthcheck:
-      test: ["CMD", "php", "-r", "echo 'ok';"]
+      test: ["CMD-SHELL", "cgi-fcgi -bind -connect 127.0.0.1:9000"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
     depends_on:
       - postgres
       - kafka
@@ -103,10 +104,12 @@ services:
 
   # Events Microservice (Nginx)
   events-nginx:
-    image: nginx:alpine
+    build:
+      context: ./src/microservices/events
+      dockerfile: Dockerfile.nginx
     container_name: cinemaabyss-events-nginx
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8000/api/events/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/api/events/health"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -128,10 +131,10 @@ services:
       dockerfile: Dockerfile
     container_name: cinemaabyss-proxy-php
     healthcheck:
-      test: ["CMD", "php", "-r", "echo 'ok';"]
+      test: ["CMD-SHELL", "cgi-fcgi -bind -connect 127.0.0.1:9000"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
     environment:
       MONOLITH_URL: http://monolith:8080
       MOVIES_SERVICE_URL: http://movies-service:8081
@@ -143,7 +146,9 @@ services:
 
   # Proxy Service (Nginx)
   proxy-nginx:
-    image: nginx:alpine
+    build:
+      context: ./src/microservices/proxy
+      dockerfile: Dockerfile.nginx
     container_name: cinemaabyss-proxy-nginx
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
@@ -156,10 +161,14 @@ services:
       - ./src/microservices/proxy:/var/www/html
       - ./src/microservices/proxy/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - proxy-php
-      - monolith
-      - movies-service
-      - events-nginx
+      proxy-php:
+        condition: service_healthy
+      monolith:
+        condition: service_started
+      movies-service:
+        condition: service_started
+      events-nginx:
+        condition: service_healthy
     networks:
       - cinemaabyss-network
 
