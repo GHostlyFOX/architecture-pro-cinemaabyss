@@ -104,7 +104,9 @@ services:
 
   # Events Microservice (Nginx)
   events-nginx:
-    image: nginx:alpine
+    build:
+      context: ./src/microservices/events
+      dockerfile: Dockerfile.nginx
     container_name: cinemaabyss-events-nginx
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8002/api/events/health"]
@@ -144,7 +146,9 @@ services:
 
   # Proxy Service (Nginx)
   proxy-nginx:
-    image: nginx:alpine
+    build:
+      context: ./src/microservices/proxy
+      dockerfile: Dockerfile.nginx
     container_name: cinemaabyss-proxy-nginx
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
